@@ -1,11 +1,12 @@
 package com.example.mywearosapplication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableRecyclerView
+
 private const val MAX_ICON_PROGRESS = 0.65f
 
 class RecycleActivity : AppCompatActivity() {
@@ -13,10 +14,18 @@ class RecycleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycle)
 
+        val menuItems = arrayListOf<String>()
+        menuItems.add("Option 1")
+        menuItems.add("Option 2")
+        menuItems.add("Option 3")
+        menuItems.add("Option 4")
+
+
         val wearableRecycler = findViewById<WearableRecyclerView>(R.id.recycler_launcher_view)
         wearableRecycler.apply {
             isEdgeItemsCenteringEnabled = true
             layoutManager = WearableLinearLayoutManager(this@RecycleActivity, CustomScrollingLayoutCallback())
+            adapter = ListAdapter(this@RecycleActivity,menuItems)
         }
     }
 }
