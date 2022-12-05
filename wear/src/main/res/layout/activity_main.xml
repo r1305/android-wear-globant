@@ -18,8 +18,8 @@
         <ImageButton
             android:id="@+id/btn_check"
             android:background="@android:color/transparent"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:src="@drawable/ic_ok" />
@@ -38,11 +38,22 @@
         <ImageButton
             android:id="@+id/btn_close"
             android:background="@android:color/transparent"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_cancel" />
+
+        <ImageButton
+            android:id="@+id/btn_list"
+            android:background="@android:color/transparent"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_check"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/icon_list" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.wear.widget.BoxInsetLayout>
