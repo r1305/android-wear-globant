@@ -78,7 +78,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:maxLines="3"
-                android:text="Sin Sensores"
+                android:text="Sin sensores"
                 android:textAllCaps="false"
                 android:textColor="#FFF"
                 android:textSize="15sp"
@@ -103,13 +103,6 @@
             android:paddingBottom="5dp"
             android:scrollbars="vertical"
             android:visibility="visible" />
-
-        <androidx.wear.widget.WearableRecyclerView
-            android:visibility="gone"
-            android:id="@+id/recycler_launcher_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

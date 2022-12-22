@@ -9,12 +9,20 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mywearosapplication.databinding.ActivityMainBinding
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wearable.CapabilityClient
+import com.google.android.gms.wearable.CapabilityInfo
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
 import kotlin.random.Random
 
+const val VOICE_TRANSCRIPTION_MESSAGE_PATH = "/voice_transcription"
 
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var transcriptionNodeId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +33,11 @@ class MainActivity : Activity() {
         binding.btnCheck.setOnClickListener {
             Toast.makeText(this, "Confirmado", Toast.LENGTH_SHORT).show()
             binding.txtTitle.text = "Confirmado"
-            sendNotification()
+            //sendNotification()
+            //setupVoiceTranscription()
+            Thread(Runnable {
+                setupVoiceTranscription()
+            }).start()
         }
 
         binding.btnList.setOnClickListener {
@@ -69,5 +81,45 @@ class MainActivity : Activity() {
             stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(resultPendingIntent)
         notificationManager.notify(notification_id, builder.build())
+    }
+
+    private fun requestTranscription(voiceData: ByteArray?) {
+        transcriptionNodeId?.also { nodeId ->
+            val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
+                nodeId,
+                VOICE_TRANSCRIPTION_MESSAGE_PATH,
+                voiceData
+            ).apply {
+                addOnSuccessListener {
+                    //Toast.makeText(this@MainActivity,"Success", Toast.LENGTH_SHORT).show()
+                    println("Success")
+                }
+                addOnFailureListener {
+                    //Toast.makeText(this@MainActivity,"Fail", Toast.LENGTH_SHORT).show()
+                    println("Fail")
+                }
+            }
+        }
+    }
+
+    private fun updateTranscriptionCapability(capabilityInfo: CapabilityInfo) {
+        transcriptionNodeId = pickBestNodeId(capabilityInfo.nodes)
+    }
+
+    private fun pickBestNodeId(nodes: Set<Node>): String? {
+        // Find a nearby node or pick one arbitrarily
+        return nodes.firstOrNull { it.isNearby }?.id ?: nodes.firstOrNull()?.id
+    }
+
+    private fun setupVoiceTranscription() {
+        val capabilityInfo: CapabilityInfo = Tasks.await(
+            Wearable.getCapabilityClient(this)
+                .getCapability(
+                    VOICE_TRANSCRIPTION_MESSAGE_PATH,
+                    CapabilityClient.FILTER_REACHABLE
+                )
+        )
+        // capabilityInfo has the reachable nodes with the transcription capability
+        updateTranscriptionCapability(capabilityInfo)
     }
 }
